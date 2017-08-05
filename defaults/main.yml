@@ -23,4 +23,4 @@ restic_owner: 'root'
 restic_group: 'root'
 
 # restic set suid access
-restic_mode: '4755'
+restic_mode: '0755'
