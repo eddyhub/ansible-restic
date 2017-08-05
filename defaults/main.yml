@@ -1,0 +1,26 @@
+---
+# defaults file for ansible-restic
+
+ansible_unit_test: false
+restic_role_release: '0.0.1'
+
+# restic version to install
+restic_version: 'latest'
+
+# restic platform
+restic_platform: 'amd64'
+
+# restic name with installed version
+restic_name: 'restic'
+
+# restic install directory
+restic_install_directory: '/usr/local/bin'
+
+# restic owner
+restic_owner: 'root'
+
+# restic group
+restic_group: 'root'
+
+# restic set suid access
+restic_mode: '4755'

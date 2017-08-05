@@ -1,0 +1,37 @@
+---
+# install tasks
+
+- name: set archive name as fact unless testing
+  set_fact:
+    restic_archive: "{{restic_name}}_{{restic_version}}_linux_{{restic_platform}}.bz2"
+  when: not ansible_unit_test
+
+- name: set install url as fact unless testing
+  set_fact:
+    restic_archive_url: "{{restic_release_url}}/v{{restic_version}}/{{restic_archive}}"
+
+- name: downloading restic archive
+  get_url:
+    url: "{{restic_archive_url}}"
+    dest: "/tmp/{{restic_archive}}"
+    mode: 0644
+
+- name: extract restic
+  command: "bunzip2 /tmp/{{restic_archive}}"
+  when:
+    - not ansible_unit_test
+
+- name: replace old restic version
+  command: "mv /tmp/{{restic_name}}_{{restic_version}}_linux_{{restic_platform}} {{restic_install_directory}}/{{restic_name}}"
+  when:
+    - not ansible_unit_test
+
+- name: set file attributes to executable
+  file:
+    state: file
+    path: "{{restic_install_directory}}/{{restic_name}}"
+    owner: "{{restic_owner}}"
+    group: "{{restic_group}}"
+    mode: "{{restic_mode}}"
+  when:
+    - not ansible_unit_test

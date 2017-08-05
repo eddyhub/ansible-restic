@@ -1,0 +1,33 @@
+---
+# tasks file for ansible-restic
+
+- name: check restic file
+  stat:
+    path: "{{restic_install_directory}}/{{restic_name}}"
+  register: restic_executable
+
+- name: get restic version info
+  shell: "{{restic_install_directory}}/{{restic_name}} version"
+  register: restic_version_info
+  when: restic_executable.stat.exists
+
+- name: get latest version info
+  uri:
+    url: "{{restic_package_meta_json}}"
+    method: GET
+    return_content: yes
+  register: latest_version_info
+  when: restic_version == "latest"
+
+- name: set latest version as fact
+  set_fact:
+    restic_version: "{{ (latest_version_info.content|from_json).tag_name  | replace('v', '')}}"
+  when: restic_version == "latest"
+
+- name: check restic version
+  set_fact:
+    desired_version_installed: "{{ restic_version_info.stdout_lines[0].find(restic_version) != -1}}"
+  when: restic_executable.stat.exists
+
+- include: "install.yml"
+  when: not restic_executable.stat.exists or not desired_version_installed
