@@ -24,3 +24,6 @@ restic_group: 'root'
 
 # restic set suid access
 restic_mode: '0755'
+
+# restic binary capabilities
+restic_capability: 'cap_dac_read_search+ep'

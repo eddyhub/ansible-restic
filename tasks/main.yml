@@ -9,6 +9,7 @@
 - name: get restic version info
   shell: "{{restic_install_directory}}/{{restic_name}} version"
   register: restic_version_info
+  changed_when: false
   when: restic_executable.stat.exists
 
 - name: get latest version info

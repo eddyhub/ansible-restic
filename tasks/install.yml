@@ -35,3 +35,11 @@
     mode: "{{restic_mode}}"
   when:
     - not ansible_unit_test
+
+- name: set capabilities for restic binary
+  capabilities:
+    path: "{{restic_install_directory}}/{{restic_name}}"
+    capability: "{{ restic_capability }}"
+    state: present
+  when:
+    - not ansible_unit_test
