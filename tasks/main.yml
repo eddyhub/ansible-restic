@@ -9,6 +9,7 @@
 - name: get restic version info
   shell: "{{restic_install_directory}}/{{restic_name}} version"
   register: restic_version_info
+  changed_when: false
   when: restic_executable.stat.exists
 
 - name: get latest version info
@@ -29,5 +30,5 @@
     desired_version_installed: "{{ restic_version_info.stdout_lines[0].find(restic_version) != -1}}"
   when: restic_executable.stat.exists
 
-- include: "install.yml"
+- include_tasks: "install.yml"
   when: not restic_executable.stat.exists or not desired_version_installed
