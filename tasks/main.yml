@@ -30,5 +30,5 @@
     desired_version_installed: "{{ restic_version_info.stdout_lines[0].find(restic_version) != -1}}"
   when: restic_executable.stat.exists
 
-- include: "install.yml"
+- include_tasks: "install.yml"
   when: not restic_executable.stat.exists or not desired_version_installed
