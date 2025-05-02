@@ -2,18 +2,18 @@
 # tasks file for ansible-restic
 
 - name: check restic file
-  stat:
+  ansible.builtin.stat:
     path: "{{restic_install_directory}}/{{restic_name}}"
   register: restic_executable
 
 - name: get restic version info
-  shell: "{{restic_install_directory}}/{{restic_name}} version"
+  ansible.builtin.shell: "{{restic_install_directory}}/{{restic_name}} version"
   register: restic_version_info
   changed_when: false
   when: restic_executable.stat.exists
 
 - name: get latest version info
-  uri:
+  ansible.builtin.uri:
     url: "{{restic_package_meta_json}}"
     method: GET
     return_content: yes
@@ -21,14 +21,14 @@
   when: restic_version == "latest"
 
 - name: set latest version as fact
-  set_fact:
+  ansible.builtin.set_fact:
     restic_version: "{{ (latest_version_info.content|from_json).tag_name  | replace('v', '')}}"
   when: restic_version == "latest"
 
 - name: check restic version
-  set_fact:
+  ansible.builtin.set_fact:
     desired_version_installed: "{{ restic_version_info.stdout_lines[0].find(restic_version) != -1}}"
   when: restic_executable.stat.exists
 
-- import_tasks: "install.yml"
+- ansible.builtin.import_tasks: "install.yml"
   when: not restic_executable.stat.exists or not desired_version_installed
